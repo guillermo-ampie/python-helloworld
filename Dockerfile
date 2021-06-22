@@ -1,9 +1,16 @@
-FROM python:3.8
-LABEL maintainer="Katie Gamanji"
+FROM python:3-slim AS build-env
+LABEL maintainer="Guillermo Ampie"
+ADD . /app
+# hadolint ignore=DL3013
+RUN pip install  --no-cache-dir --upgrade pip && \
+    pip install  --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
 
-COPY . /app
 WORKDIR /app
-RUN pip install -r requirements.txt
 
-# command to run on container start
+FROM gcr.io/distroless/python3
+COPY --from=build-env /app /app
+WORKDIR /app
+
+EXPOSE 8080
+
 CMD [ "python", "app.py" ]
