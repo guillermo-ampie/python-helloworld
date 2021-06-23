@@ -1,47 +1,41 @@
-from flask import Flask
-from flask import json
-import logging
+from flask import Flask, jsonify
+from loguru import logger
 
 app = Flask(__name__)
 
 
-@app.route('/status')
-def healthcheck():
-    response = app.response_class(response=json.dumps(
-        {"result": "OK - healthy"}),
-                                  status=200,
-                                  mimetype='application/json')
-
-    app.logger.info('Status request successfull')
-    return response
-
-
-@app.route('/metrics')
-def metrics():
-    response = app.response_class(response=json.dumps({
-        "status": "success",
-        "code": 0,
-        "data": {
-            "UserCount": 140,
-            "UserCountActive": 23
-        }
-    }),
-                                  status=200,
-                                  mimetype='application/json')
-
-    app.logger.info('Metrics request successfull')
-    return response
-
-
 @app.route("/")
 def hello():
-    app.logger.info('Main request successfull')
-
+    logger.info("| << / >> endpoint was reached")
     return "Hello World!"
 
 
-if __name__ == "__main__":
-    ## stream logs to a file
-    logging.basicConfig(filename='app.log', level=logging.DEBUG)
+@app.route("/status")
+def get_status():
+    logger.info("| << /status >> endpoint was reached")
 
-    app.run(host='0.0.0.0', debug=True, port=8080)
+    response = {'result': 'OK - healthy'}
+    response["user"] = "admin"
+    return jsonify(response), 200
+
+
+@app.route("/metrics")
+def get_metrics():
+    logger.info("| << /metrics >> endpoint was reached")
+
+    response = {"status": "success"}
+    response["data"] = {"UserCount": "140", "UserCountActive": "23"}
+    response["user"] = "admin"
+    return jsonify(response), 200
+
+
+if __name__ == "__main__":
+    logger.add("app.log",
+               format="{time} {level} {message}",
+               level="INFO",
+               rotation="1 MB",
+               compression="zip")
+
+    logger.debug("| Starting Flask app")
+    app.run(host='0.0.0.0', port=8080, debug=True)
+    logger.debug("| Exiting Flask app")
