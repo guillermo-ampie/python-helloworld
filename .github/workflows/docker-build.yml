@@ -1,5 +1,5 @@
 ##  Named of the workflow.
-name: Python version
+name: Deploy artifact to hub.docker.com
 ## Set the trigger policy.
 ## In this case, the workflow is execute on a `push` event,
 ## or when a new commit is pushed to the repository
@@ -33,6 +33,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: .
+          file: ./Dockerfile
           push: true
-          platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64 #, linux/arm64
           tags: gampie/python-helloworld:latest
