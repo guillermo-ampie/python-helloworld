@@ -1,16 +1,21 @@
-FROM python:3-slim AS build-env
-LABEL maintainer="Guillermo Ampie"
-ADD . /app
-# hadolint ignore=DL3013
-RUN pip install  --no-cache-dir --upgrade pip && \
-    pip install  --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
+# Reference: https://github.com/GoogleContainerTools/distroless/blob/main/examples/python3-requirements/Dockerfile
+FROM debian:buster-slim AS build
+RUN apt-get update && \
+    apt-get -y install --no-install-suggests --no-install-recommends python3 python3-venv && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    python3 -m venv /venv && \
+    /venv/bin/pip install  --no-cache-dir --upgrade pip
 
-WORKDIR /app
+FROM build AS build-venv
+COPY ./requirements.txt /requirements.txt
+RUN  /venv/bin/pip install  --no-cache-dir -r /requirements.txt
 
 FROM gcr.io/distroless/python3
-COPY --from=build-env /app /app
+COPY --from=build-venv /venv /venv
+COPY . /app
 WORKDIR /app
 
 EXPOSE 8080
 
-CMD [ "python", "app.py" ]
+ENTRYPOINT [ "/venv/bin/python3", "app.py" ]
