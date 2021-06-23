@@ -4,8 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+loguru = "==0.5.3"
 Flask = "==1.1.1"
-Werkzeug = "==0.16.1"
 
 [dev-packages]
 pytest = "*"
@@ -13,4 +13,4 @@ pylint = "*"
 yapf = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"
