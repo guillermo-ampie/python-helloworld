@@ -35,4 +35,4 @@ jobs:
         with:
           push: true
           platforms: linux/amd64, linux/arm64
-          tags: user/app:latest
+          tags: gampie/python-helloworld:latest
