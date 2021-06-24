@@ -49,6 +49,19 @@ push-docker: build-docker
 	# docker tag ${DOCKER_REPOSITORY}:${VERSION} ${DOCKER_PATH}:${VERSION}
 	docker push ${DOCKER_PATH}:${VERSION}
 
+argocd:
+        kubectl create namespace argocd
+        kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+update-argocd-server:
+        kubectl apply -f .argocd/argocd-server-nodeport.yml
+
+get-initial-admin-password:
+        kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d	
+
+deploy:
+        kubectl apply -f  .argocd/python-helloworld-argocd.yml
+			
 clean:
 	-docker image rm ${DOCKER_PATH}:${VERSION}
 	-pipenv --rm
