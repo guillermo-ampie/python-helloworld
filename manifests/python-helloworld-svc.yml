@@ -10,7 +10,7 @@ spec:
   - port: 8080
     protocol: TCP
     targetPort: 8080
-    nodePort: 31180
+    nodePort: 30080
   selector:
     app: python-helloworld
   type: NodePort
