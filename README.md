@@ -1,4 +1,4 @@
-# python-hello-world
+# python-helloworld
 
 [![Deploy artifact to hub.docker.com](https://github.com/guillermo-ampie/python-helloworld/actions/workflows/docker-build.yml/badge.svg)](https://github.com/guillermo-ampie/python-helloworld/actions/workflows/docker-build.yml)
 
