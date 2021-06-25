@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: python-helloworld 
+  name: python-helloworld
   namespace: argocd
 spec:
   destination:
@@ -10,6 +10,6 @@ spec:
   project: default
   source:
     path: manifests
-    repoURL: https://github.com/guillermo-ampie/python-helloworld 
+    repoURL: https://github.com/guillermo-ampie/python-helloworld
     targetRevision: HEAD
   syncPolicy: {}
